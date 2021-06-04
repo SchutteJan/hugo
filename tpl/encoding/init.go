@@ -44,6 +44,20 @@ func init() {
 			},
 		)
 
+		ns.AddMethodMapping(ctx.Base64URLSafeEncode,
+			[]string{"base64URLSafeEncode"},
+			[][2]string{
+				{`{{ "Hello world" | base64URLSafeEncode }}`, `SGVsbG8gd29ybGQ`},
+			},
+		)
+
+		ns.AddMethodMapping(ctx.HexDecode,
+			[]string{"hexDecode"},
+			[][2]string{
+				{`{{ "Hello world" | hexDecode }}`, `TODO`},
+			},
+		)
+
 		ns.AddMethodMapping(ctx.Jsonify,
 			[]string{"jsonify"},
 			[][2]string{
