@@ -58,6 +58,13 @@ func init() {
 			},
 		)
 
+		ns.AddMethodMapping(ctx.SaltedHMAC,
+			[]string{"shmac"},
+			[][2]string{
+				{`{{ shmac "sha256" "Secret key" "Salt" "Hello world, gophers!" }}`, `໥�#5E�E.%CDS*�gt;!q`},
+			},
+		)
+
 		return ns
 	}
 

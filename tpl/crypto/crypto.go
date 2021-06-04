@@ -107,3 +107,54 @@ func (ns *Namespace) HMAC(h interface{}, k interface{}, m interface{}) (string, 
 
 	return hex.EncodeToString(mac.Sum(nil)[:]), nil
 }
+
+// Salted HMAC returns a cryptographic hash that uses a key and a salt to sign a message.
+func (ns *Namespace) SaltedHMAC(h interface{}, k interface{}, s interface{}, m interface{}) (string, error) {
+	ha, err := cast.ToStringE(h)
+	if err != nil {
+		return "", err
+	}
+
+	var hash func() hash.Hash
+	switch ha {
+	case "md5":
+		hash = md5.New
+	case "sha1":
+		hash = sha1.New
+	case "sha256":
+		hash = sha256.New
+	case "sha512":
+		hash = sha512.New
+	default:
+		return "", fmt.Errorf("hmac: %s is not a supported hash function", ha)
+	}
+
+	msg, err := cast.ToStringE(m)
+	if err != nil {
+		return "", err
+	}
+
+	key, err := cast.ToStringE(k)
+	if err != nil {
+		return "", err
+	}
+
+	salt, err := cast.ToStringE(s)
+	if err != nil {
+		return "", err
+	}
+
+	mac := hmac.New(hash, []byte(key))
+
+	_, err = mac.Write([]byte(salt))
+	if err != nil {
+		return "", err
+	}
+
+	_, err = mac.Write([]byte(msg))
+	if err != nil {
+		return "", err
+	}
+
+	return string(mac.Sum(nil)[:]), nil
+}
